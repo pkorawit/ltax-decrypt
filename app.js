@@ -1,12 +1,15 @@
-const { exec } = require("child_process");
+const fs = require('fs');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
-const parcelCodes = ["10A001", "10A002", "10A003", "10A004", "10A005", "10A006"]
+async function main() {
+    let geojson = fs.readFileSync("./test.geojson");
+    let data = JSON.parse(geojson);
+    for (code in data.features) {
 
-for(code in parcelCodes){
+        let parcelCode = data.features[code].properties.parcel_cod;
 
-    let parcelCode = parcelCodes[code]
-
-    exec(`.\\utility\\LTax4Utility.exe ${parcelCode}`, (error, stdout, stderr) => {
+        const { error, stdout, stderr } = await exec(`.\\utility\\LTax4Utility.exe ${parcelCode}`);
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -16,7 +19,11 @@ for(code in parcelCodes){
             return;
         }
         console.log(`${parcelCode} => ${stdout}`);
-    });
-
+    }
 }
+
+main()
+
+
+
 
