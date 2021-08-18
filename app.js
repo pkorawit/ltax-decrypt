@@ -9,7 +9,7 @@ async function main() {
 
         let parcelCode = data.features[code].properties.parcel_cod;
 
-        const { error, stdout, stderr } = await exec(`.\\utility\\LTax4Utility.exe ${parcelCode}`);
+        const { error, stdout, stderr } = await exec(`.\\utility\\LTax4Utility.exe -encrypt ${parcelCode}`);
         if (error) {
             console.log(`error: ${error.message}`);
             return;
